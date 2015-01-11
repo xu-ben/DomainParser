@@ -34,6 +34,13 @@ public class DomainParser {
 		return dp;
 	}
 	
+	private String getHostFromLine(String line) {
+		int index = line.indexOf('#');
+		if (index < 0) {
+			return line;
+		}
+		return line.substring(0, index);
+	}
 
 	/**
 	 * @param args
@@ -43,7 +50,14 @@ public class DomainParser {
 		Scanner cin = new Scanner(System.in);
 		while (cin.hasNextLine()) {
 			String line = cin.nextLine().trim();
-			String ret = dp.getIpv6ofDomain(line);
+			if (line == null || line.length() <= 0) {
+				continue;
+			}
+			String host = dp.getHostFromLine(line).trim();
+			if (host == null || host.length() <= 0) {
+				continue;
+			}
+			String ret = dp.getIpv6ofDomain(host);
 			StringBuilder sb = new StringBuilder();
 			if (ret == null) {
 				ret = dp.getIpv4ofDomain(line);
@@ -75,7 +89,6 @@ public class DomainParser {
 					}
 				}
 			} catch (UnknownHostException e) {
-				e.printStackTrace();
 			}
 		return null;
 	}
@@ -96,7 +109,6 @@ public class DomainParser {
 					}
 				}
 			} catch (UnknownHostException e) {
-				e.printStackTrace();
 			}
 		return null;
 	}
